@@ -17,15 +17,18 @@ class Custom_LendItemCommon extends ModuleCommon {
 		Utils_MessengerCommon::delete_by_id('Custom_LendItem_Event:'.$data['id']);
 		break;
 	    case 'update':
+		// delete previous alert
 	    	Utils_MessengerCommon::delete_by_id('Custom_LendItem_Event:'.$data['id']);
+
 	    	// automatically add alerts for selected employees
 		$message = $data['items'];
 		$start = strtotime($data['limit_date']);
 		$eee = array();
 	    	foreach($data['employees'] as $v) {
 			$c = CRM_ContactsCommon::get_contact($v);
-			if(isset($c['login']))
+			if(isset($c['login']) && (Base_User_SettingsCommon::get('Utils_Messenger','allow_other',$c['id']) || Acl::get_user()==$c['id'])) {
 				$eee[] = $c['login'];
+			}
 		}
 		Utils_MessengerCommon::add('Custom_LendItem_Event:'.$data['id'],'Custom_LendItem', $message, $start, array('Custom_LendItemCommon','get_alarm'),array($data['id']),$eee);
 	    	break;
@@ -39,7 +42,7 @@ class Custom_LendItemCommon extends ModuleCommon {
 		$eee = array();
 		foreach($data['employees'] as $v) {
 			$c = CRM_ContactsCommon::get_contact($v);
-			if(isset($c['login']))
+			if(isset($c['login']) && (Base_User_SettingsCommon::get('Utils_Messenger','allow_other',$c['id']) || Acl::get_user()==$c['id']))
 				$eee[] = $c['login'];
 		}
 		Utils_MessengerCommon::add('Custom_LendItem_Event:'.$data['id'],'Custom_LendItem', $message, $start, array('Custom_LendItemCommon','get_alarm'),array($data['id']),$eee);
