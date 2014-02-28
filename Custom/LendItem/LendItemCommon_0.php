@@ -151,7 +151,7 @@ class Custom_LendItemCommon extends ModuleCommon {
 			$next['color'] = 'gray';
 
 		$next['view_action'] = Utils_RecordBrowserCommon::create_record_href('custom_lenditem', $r['id'], 'view', array('day'=>$day));
-		$next['edit_action'] = false;
+		$next['edit_action'] = Utils_RecordBrowserCommon::create_record_href('custom_lenditem', $r['id'], 'edit', array('day'=>$day));;
 		$next['move_action'] = false;
 		
 		if (Utils_RecordBrowserCommon::get_access('custom_lenditem','delete', $r)==false)
